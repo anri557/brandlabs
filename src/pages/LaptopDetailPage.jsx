@@ -3,14 +3,13 @@ import { Link, useParams } from 'react-router-dom';
 import { FaCartShopping, FaCheck, FaHeart, FaRegHeart, FaArrowLeft } from 'react-icons/fa6';
 import { IoShieldCheckmarkOutline } from 'react-icons/io5';
 import { MdOutlineLocalShipping } from 'react-icons/md';
-import laptops from '../../data/laptops.js';
 import { useStore } from '../../context/StoreContext';
 import { useLanguage } from '../../context/LanguageContext';
 import LaptopCard from '../../components/LaptopCard';
 
 const LaptopDetailPage = () => {
   const { slug } = useParams();
-  const { addToCart, toggleWishlist, isInWishlist } = useStore();
+  const { products: laptops, addToCart, toggleWishlist, isInWishlist } = useStore();
   const { t } = useLanguage();
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);

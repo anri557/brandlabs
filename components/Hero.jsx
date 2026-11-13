@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BsController } from 'react-icons/bs';
-import { IoLaptopOutline, IoShieldCheckmarkOutline, IoFlashOutline } from 'react-icons/io5';
-import { RiTentLine } from 'react-icons/ri';
-import { MdOutlineLocalOffer, MdOutlineLocalShipping, MdOutlineSupportAgent } from 'react-icons/md';
+import { IoPhonePortraitOutline, IoShieldCheckmarkOutline, IoFlashOutline, IoCameraOutline } from 'react-icons/io5';
+import { MdOutlineLocalOffer, MdOutlineLocalShipping, MdOutlineSupportAgent, MdOutlineDevices } from 'react-icons/md';
 import { FaArrowRight } from 'react-icons/fa6';
-import laptops from '../data/laptops.js';
 import LaptopCard from './LaptopCard';
 import { useLanguage } from '../context/LanguageContext';
+import { useStore } from '../context/StoreContext';
 
-const BRANDS = ['Apple', 'MSI', 'ASUS', 'Lenovo'];
+const BRANDS = ['Samsung', 'Google', 'Xiaomi'];
 
 const VALUE_ICONS = [
   <IoShieldCheckmarkOutline key="shield" size={26} aria-hidden="true" />,
@@ -20,15 +18,16 @@ const VALUE_ICONS = [
 
 const Hero = () => {
   const { t } = useLanguage();
+  const { products } = useStore();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
   const categories = [
-    { id: 'gaming', name: t.home.categories.gaming, icon: <BsController aria-hidden="true" />, route: '/Gaming' },
-    { id: 'business', name: t.home.categories.business, icon: <IoLaptopOutline aria-hidden="true" />, route: '/Business' },
-    { id: 'ultrabook', name: t.home.categories.ultrabook, icon: <IoLaptopOutline aria-hidden="true" />, route: '/Education' },
-    { id: '2-in-1', name: t.home.categories['2-in-1'], icon: <RiTentLine aria-hidden="true" />, route: '/Business' },
+    { id: 'foldable', name: t.home.categories.foldable, icon: <MdOutlineDevices aria-hidden="true" />, route: '/Foldables' },
+    { id: 'flagship', name: t.home.categories.flagship, icon: <IoPhonePortraitOutline aria-hidden="true" />, route: '/Flagships' },
+    { id: 'camera', name: t.home.categories.camera, icon: <IoCameraOutline aria-hidden="true" />, route: '/Camera' },
+    { id: 'compact', name: t.home.categories.compact, icon: <IoPhonePortraitOutline aria-hidden="true" />, route: '/Deals' },
     { id: 'budget', name: t.home.categories.budget, icon: <MdOutlineLocalOffer aria-hidden="true" />, route: '/Deals' },
   ];
 
@@ -36,15 +35,13 @@ const Hero = () => {
     setSelectedCategory((prev) => (prev === categoryId ? null : categoryId));
   };
 
-  const filteredLaptops = selectedCategory
-    ? laptops.filter((laptop) => laptop.type === selectedCategory)
+  const filteredProducts = selectedCategory
+    ? products.filter((item) => item.type === selectedCategory)
     : [];
 
-  const appleLaptops = laptops.filter((laptop) => laptop.brand === 'Apple');
-  const msiLaptops = laptops.filter((laptop) => laptop.brand === 'MSI');
-  const otherLaptops = laptops.filter(
-    (laptop) => laptop.brand !== 'Apple' && laptop.brand !== 'MSI'
-  );
+  const samsungPhones = products.filter((item) => item.brand === 'Samsung');
+  const otherPhones = products.filter((item) => item.brand !== 'Samsung');
+  const featuredFold = products[0];
 
   const activeCategoryObj = categories.find((c) => c.id === selectedCategory);
 
@@ -57,20 +54,37 @@ const Hero = () => {
 
   return (
     <div className="home-page">
-      <section className="hero-banner" aria-label="Featured promotion">
-        <Link to="/Deals" className="hero-banner__link" aria-label={t.home.viewAllLaptops}>
-          <picture>
-            <source media="(max-width: 479px)" srcSet="/heromobile.png" />
-            <img
-              src="/heroImg.jpeg"
-              alt="Precision for Productivity. Power for Play. Shop gaming rigs, workstations, and premium laptop brands."
-              fetchpriority="high"
-              width="1600"
-              height="560"
-              className="hero-banner__img"
-            />
-          </picture>
-        </Link>
+      <section className="hero-editorial container" aria-label="Featured promotion">
+        <div className="hero-editorial__card">
+          <div className="hero-editorial__copy">
+            <span className="hero-editorial__eyebrow">{t.home.heroEyebrow}</span>
+            <h1 className="hero-editorial__title">{t.home.heroTitle}</h1>
+            <p className="hero-editorial__text">{t.home.heroText}</p>
+            <div className="hero-editorial__actions">
+              <Link to="/Deals" className="btn-primary">
+                {t.home.heroCta} <FaArrowRight size={13} aria-hidden="true" />
+              </Link>
+              {featuredFold && (
+                <Link to={`/laptop/${featuredFold.slug}`} className="btn-secondary hero-editorial__alt">
+                  {featuredFold.name}
+                </Link>
+              )}
+            </div>
+          </div>
+
+          {featuredFold && (
+            <Link to={`/laptop/${featuredFold.slug}`} className="hero-editorial__media">
+              <img
+                src={featuredFold.image}
+                alt={featuredFold.name}
+                fetchpriority="high"
+                width="650"
+                height="519"
+                className="hero-editorial__img"
+              />
+            </Link>
+          )}
+        </div>
       </section>
 
       <section className="page-section container" aria-labelledby="categories-heading">
@@ -88,7 +102,7 @@ const Hero = () => {
             </button>
           ) : (
             <Link to="/Deals" className="section-link">
-              {t.home.viewAllLaptops} <FaArrowRight size={13} aria-hidden="true" />
+              {t.home.viewAllPhones} <FaArrowRight size={13} aria-hidden="true" />
             </Link>
           )}
         </div>
@@ -120,67 +134,71 @@ const Hero = () => {
         <section className="page-section container" aria-labelledby="filtered-heading">
           <div className="section-header">
             <h2 id="filtered-heading" className="section-title">
-              {activeCategoryObj?.name} ({filteredLaptops.length})
+              {activeCategoryObj?.name} ({filteredProducts.length})
             </h2>
             <Link to={activeCategoryObj?.route || '/Deals'} className="section-link">
               {t.home.openFullCatalog} <FaArrowRight size={13} aria-hidden="true" />
             </Link>
           </div>
           <div className="product-grid">
-            {filteredLaptops.map((laptop) => (
-              <LaptopCard key={laptop.id} laptop={laptop} />
+            {filteredProducts.map((item) => (
+              <LaptopCard key={item.id} laptop={item} />
             ))}
           </div>
         </section>
       )}
 
-      <section className="page-section container" aria-labelledby="apple-heading">
+      <section className="page-section container" aria-labelledby="featured-heading">
         <div className="section-header">
-          <h2 id="apple-heading" className="section-title">
-            {t.home.appleHeading}
+          <h2 id="featured-heading" className="section-title">
+            {t.home.featuredHeading}
           </h2>
-          <Link to="/Deals?brand=Apple" className="section-link">
-            {t.home.seeAllApple} <FaArrowRight size={13} aria-hidden="true" />
+          <Link to="/Deals" className="section-link">
+            {t.home.seeAllPhones} <FaArrowRight size={13} aria-hidden="true" />
           </Link>
         </div>
         <div className="product-grid">
-          {appleLaptops.map((laptop) => (
-            <LaptopCard key={laptop.id} laptop={laptop} />
+          {products.map((item) => (
+            <LaptopCard key={item.id} laptop={item} />
           ))}
         </div>
       </section>
 
-      <section className="page-section container" aria-labelledby="msi-heading">
-        <div className="section-header">
-          <h2 id="msi-heading" className="section-title">
-            {t.home.msiHeading}
-          </h2>
-          <Link to="/Gaming" className="section-link">
-            {t.home.seeAllGaming} <FaArrowRight size={13} aria-hidden="true" />
-          </Link>
-        </div>
-        <div className="product-grid">
-          {msiLaptops.map((laptop) => (
-            <LaptopCard key={laptop.id} laptop={laptop} />
-          ))}
-        </div>
-      </section>
+      {samsungPhones.length > 0 && (
+        <section className="page-section container" aria-labelledby="samsung-heading">
+          <div className="section-header">
+            <h2 id="samsung-heading" className="section-title">
+              {t.home.samsungHeading}
+            </h2>
+            <Link to="/Deals?brand=Samsung" className="section-link">
+              {t.home.seeAllSamsung} <FaArrowRight size={13} aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="product-grid">
+            {samsungPhones.map((item) => (
+              <LaptopCard key={item.id} laptop={item} />
+            ))}
+          </div>
+        </section>
+      )}
 
-      <section className="page-section container" aria-labelledby="more-brands-heading">
-        <div className="section-header">
-          <h2 id="more-brands-heading" className="section-title">
-            {t.home.moreBrandsHeading}
-          </h2>
-          <Link to="/Business" className="section-link">
-            {t.home.exploreBusiness} <FaArrowRight size={13} aria-hidden="true" />
-          </Link>
-        </div>
-        <div className="product-grid">
-          {otherLaptops.map((laptop) => (
-            <LaptopCard key={laptop.id} laptop={laptop} />
-          ))}
-        </div>
-      </section>
+      {otherPhones.length > 0 && (
+        <section className="page-section container" aria-labelledby="more-brands-heading">
+          <div className="section-header">
+            <h2 id="more-brands-heading" className="section-title">
+              {t.home.pixelXiaomiHeading}
+            </h2>
+            <Link to="/Flagships" className="section-link">
+              {t.home.seeAllFlagships} <FaArrowRight size={13} aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="product-grid">
+            {otherPhones.map((item) => (
+              <LaptopCard key={item.id} laptop={item} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="page-section container" aria-labelledby="why-us-heading">
         <div className="section-header">

@@ -2,14 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { CiUser, CiHeart, CiShoppingCart, CiSearch } from 'react-icons/ci';
 import { HiOutlineBars3 } from 'react-icons/hi2';
-import laptops from '../data/laptops.js';
 import { useStore } from '../context/StoreContext';
 import { useLanguage } from '../context/LanguageContext';
 
 const Navbar = () => {
   const [inputValue, setInputValue] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
-  const { cartCount, wishlist } = useStore();
+  const { products, cartCount, wishlist } = useStore();
   const { lang, setLang, t } = useLanguage();
   const navigate = useNavigate();
   const mobileMenuRef = useRef(null);
@@ -17,16 +16,15 @@ const Navbar = () => {
 
   const categoryLinks = [
     { to: '/', label: t.nav.home },
-    { to: '/Gaming', label: t.nav.gaming },
-    { to: '/Business', label: t.nav.business },
-    { to: '/Education', label: t.nav.education },
-    { to: '/Accessories', label: t.nav.accessories },
+    { to: '/Foldables', label: t.nav.foldables },
+    { to: '/Flagships', label: t.nav.flagships },
+    { to: '/Camera', label: t.nav.camera },
     { to: '/Deals', label: t.nav.deals },
   ];
 
   const query = inputValue.trim().toLowerCase();
   const filteredLaptops = query
-    ? laptops.filter(
+    ? products.filter(
         (laptop) =>
           laptop.name.toLowerCase().includes(query) ||
           laptop.brand.toLowerCase().includes(query) ||
@@ -107,7 +105,7 @@ const Navbar = () => {
         <div className="container site-header__row">
           <Link to="/" className="site-logo">
             <img
-              src="/logoImg.jpg"
+              src="/ilab-logo.jpg"
               alt={t.brandName}
               width="44"
               height="44"

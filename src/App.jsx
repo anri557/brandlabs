@@ -9,6 +9,7 @@ import CatalogPage from './pages/CatalogPage';
 import CartPage from './pages/CartPage';
 import WishlistPage from './pages/WishlistPage';
 import AccountPage from './pages/AccountPage';
+import AdminPage from './pages/AdminPage';
 
 const Home = () => (
   <main>
@@ -27,20 +28,16 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/laptop/:slug" element={<LaptopDetailPage />} />
               <Route
-                path="/Gaming"
-                element={<CatalogPage key="gaming" pageKey="gaming" defaultType="gaming" />}
+                path="/Foldables"
+                element={<CatalogPage key="foldable" pageKey="foldables" defaultType="foldable" />}
               />
               <Route
-                path="/Business"
-                element={<CatalogPage key="business" pageKey="business" defaultType="business" />}
+                path="/Flagships"
+                element={<CatalogPage key="flagship" pageKey="flagships" defaultType="flagship" />}
               />
               <Route
-                path="/Education"
-                element={<CatalogPage key="ultrabook" pageKey="education" defaultType="ultrabook" />}
-              />
-              <Route
-                path="/Accessories"
-                element={<CatalogPage key="2-in-1" pageKey="accessories" defaultType="2-in-1" />}
+                path="/Camera"
+                element={<CatalogPage key="camera" pageKey="camera" defaultType="camera" />}
               />
               <Route
                 path="/Deals"
@@ -50,6 +47,7 @@ const App = () => {
               <Route path="/Wishlist" element={<WishlistPage />} />
               <Route path="/Whishlist" element={<Navigate to="/Wishlist" replace />} />
               <Route path="/Account" element={<AccountPage />} />
+              <Route path="/admin" element={<AdminPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </div>

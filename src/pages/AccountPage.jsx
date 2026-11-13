@@ -39,7 +39,7 @@ const AccountPage = () => {
         <div className="trust-card">
           <h2 className="trust-card__title">{t.accountPage.warrantySupport}</h2>
           <p className="trust-card__text">{t.accountPage.warrantyText}</p>
-          <a href="mailto:support@brandlaptops.com" className="section-link">
+          <a href="tel:+995555910817" className="section-link">
             {t.accountPage.emailSupport}
           </a>
         </div>

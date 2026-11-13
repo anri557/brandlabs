@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import defaultLaptops from '../data/laptops.js';
 
 const StoreContext = createContext(null);
 
@@ -11,13 +12,29 @@ const readStorage = (key, fallback) => {
   }
 };
 
+const toSlug = (text) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 export const StoreProvider = ({ children }) => {
-  const [cart, setCart] = useState(() => readStorage('bl_cart', []));
-  const [wishlist, setWishlist] = useState(() => readStorage('bl_wishlist', []));
+  const [products, setProducts] = useState(() => readStorage('ilab_products_v1', defaultLaptops));
+  const [cart, setCart] = useState(() => readStorage('ilab_cart_v1', []));
+  const [wishlist, setWishlist] = useState(() => readStorage('ilab_wishlist_v1', []));
 
   useEffect(() => {
     try {
-      localStorage.setItem('bl_cart', JSON.stringify(cart));
+      localStorage.setItem('ilab_products_v1', JSON.stringify(products));
+    } catch {
+      // ignore storage errors
+    }
+  }, [products]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('ilab_cart_v1', JSON.stringify(cart));
     } catch {
       // ignore storage errors
     }
@@ -25,11 +42,77 @@ export const StoreProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      localStorage.setItem('bl_wishlist', JSON.stringify(wishlist));
+      localStorage.setItem('ilab_wishlist_v1', JSON.stringify(wishlist));
     } catch {
       // ignore storage errors
     }
   }, [wishlist]);
+
+  const addProduct = (data) => {
+    const nextId = products.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1;
+    const baseSlug = toSlug(`${data.brand} ${data.name}`) || `laptop-${nextId}`;
+    const slugExists = products.some((item) => item.slug === baseSlug);
+    const slug = slugExists ? `${baseSlug}-${nextId}` : baseSlug;
+
+    const newProduct = {
+      id: nextId,
+      slug,
+      year: Number(data.year) || new Date().getFullYear(),
+      brand: data.brand.trim(),
+      name: data.name.trim(),
+      image: data.image.trim(),
+      price: Number(data.price) || 0,
+      description: data.description.trim(),
+      type: data.type,
+      specs: {
+        processor: data.specs.processor.trim(),
+        memory: data.specs.memory.trim(),
+        storage: data.specs.storage.trim(),
+        display: data.specs.display.trim(),
+        graphics: data.specs.graphics.trim(),
+        battery: data.specs.battery.trim(),
+      },
+    };
+
+    setProducts((prev) => [newProduct, ...prev]);
+    return newProduct;
+  };
+
+  const updateProduct = (id, data) => {
+    setProducts((prev) =>
+      prev.map((item) => {
+        if (item.id !== id) return item;
+        return {
+          ...item,
+          year: Number(data.year) || item.year,
+          brand: data.brand.trim(),
+          name: data.name.trim(),
+          image: data.image.trim(),
+          price: Number(data.price) || 0,
+          description: data.description.trim(),
+          type: data.type,
+          specs: {
+            processor: data.specs.processor.trim(),
+            memory: data.specs.memory.trim(),
+            storage: data.specs.storage.trim(),
+            display: data.specs.display.trim(),
+            graphics: data.specs.graphics.trim(),
+            battery: data.specs.battery.trim(),
+          },
+        };
+      })
+    );
+  };
+
+  const deleteProduct = (id) => {
+    setProducts((prev) => prev.filter((item) => item.id !== id));
+    setCart((prev) => prev.filter((item) => item.id !== id));
+    setWishlist((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const resetProducts = () => {
+    setProducts(defaultLaptops);
+  };
 
   const addToCart = (laptop, quantity = 1) => {
     setCart((prev) => {
@@ -72,6 +155,11 @@ export const StoreProvider = ({ children }) => {
   return (
     <StoreContext.Provider
       value={{
+        products,
+        addProduct,
+        updateProduct,
+        deleteProduct,
+        resetProducts,
         cart,
         wishlist,
         cartCount,

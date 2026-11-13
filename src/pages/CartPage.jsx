@@ -32,7 +32,7 @@ const CartPage = () => {
         <h1>{t.cartPage.emptyTitle}</h1>
         <p>{t.cartPage.emptyText}</p>
         <Link to="/" className="btn-primary">
-          <FaArrowLeft aria-hidden="true" /> {t.cartPage.browseLaptops}
+          <FaArrowLeft aria-hidden="true" /> {t.cartPage.browsePhones}
         </Link>
       </main>
     );

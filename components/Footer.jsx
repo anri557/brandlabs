@@ -16,9 +16,9 @@ const Footer = () => {
           <h3 className="site-footer__heading">{t.footer.explore}</h3>
           <ul className="site-footer__links">
             <li><Link to="/">{t.footer.home}</Link></li>
-            <li><Link to="/Gaming">{t.footer.gaming}</Link></li>
-            <li><Link to="/Business">{t.footer.business}</Link></li>
-            <li><Link to="/Education">{t.footer.education}</Link></li>
+            <li><Link to="/Foldables">{t.footer.foldables}</Link></li>
+            <li><Link to="/Flagships">{t.footer.flagships}</Link></li>
+            <li><Link to="/Camera">{t.footer.camera}</Link></li>
             <li><Link to="/Deals">{t.footer.deals}</Link></li>
           </ul>
         </div>
@@ -29,16 +29,25 @@ const Footer = () => {
             <li><Link to="/Account">{t.footer.myAccount}</Link></li>
             <li><Link to="/Wishlist">{t.footer.wishlist}</Link></li>
             <li><Link to="/Cart">{t.footer.shoppingCart}</Link></li>
-            <li><Link to="/Accessories">{t.footer.accessories}</Link></li>
+            <li><Link to="/admin">{t.footer.adminPanel}</Link></li>
           </ul>
         </div>
 
         <div>
           <h3 className="site-footer__heading">{t.footer.support}</h3>
           <ul className="site-footer__links">
-            <li><a href="mailto:support@brandlaptops.com">support@brandlaptops.com</a></li>
-            <li><a href="tel:+18005550199">1-800-555-0199</a></li>
-            <li><span>{t.footer.hours}</span></li>
+            <li><a href="tel:+995555910817">+995 555 91 08 17</a></li>
+            <li><span>{t.footer.address}</span></li>
+            <li><span>{t.footer.warranty}</span></li>
+            <li>
+              <a
+                href="https://www.instagram.com/brandlaptops7/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram: {t.footer.instagram}
+              </a>
+            </li>
           </ul>
         </div>
       </div>

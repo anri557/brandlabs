@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import laptops from '../../data/laptops.js';
 import LaptopCard from '../../components/LaptopCard';
 import { useLanguage } from '../../context/LanguageContext';
+import { useStore } from '../../context/StoreContext';
 
-const BRANDS = ['All', 'Apple', 'MSI', 'ASUS', 'Lenovo'];
+const BRANDS = ['All', 'Samsung', 'Google', 'Xiaomi'];
 
 const CatalogPage = ({ pageKey = 'deals', defaultType = 'all' }) => {
   const { t } = useLanguage();
+  const { products: laptops } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const brandParam = searchParams.get('brand');
   const selectedBrand = brandParam && BRANDS.includes(brandParam) ? brandParam : 'All';
@@ -20,10 +21,10 @@ const CatalogPage = ({ pageKey = 'deals', defaultType = 'all' }) => {
 
   const types = [
     { id: 'all', label: t.catalog.allTypes },
-    { id: 'gaming', label: t.nav.gaming },
-    { id: 'business', label: t.nav.business },
-    { id: 'ultrabook', label: t.home.categories.ultrabook },
-    { id: '2-in-1', label: '2-in-1' },
+    { id: 'foldable', label: t.home.categories.foldable },
+    { id: 'flagship', label: t.home.categories.flagship },
+    { id: 'camera', label: t.home.categories.camera },
+    { id: 'compact', label: t.home.categories.compact },
     { id: 'budget', label: t.home.categories.budget },
   ];
 
@@ -48,7 +49,7 @@ const CatalogPage = ({ pageKey = 'deals', defaultType = 'all' }) => {
       list = [...list].sort((a, b) => b.year - a.year);
     }
     return list;
-  }, [selectedBrand, selectedType, sortBy, queryParam]);
+  }, [laptops, selectedBrand, selectedType, sortBy, queryParam]);
 
   const handleBrandChange = (brand) => {
     const next = new URLSearchParams(searchParams);
