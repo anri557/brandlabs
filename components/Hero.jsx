@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IoPhonePortraitOutline, IoShieldCheckmarkOutline, IoFlashOutline, IoCameraOutline } from 'react-icons/io5';
-import { MdOutlineLocalOffer, MdOutlineLocalShipping, MdOutlineSupportAgent, MdOutlineDevices } from 'react-icons/md';
+import { IoPhonePortraitOutline, IoShieldCheckmarkOutline, IoFlashOutline, IoWatchOutline, IoEyeOutline } from 'react-icons/io5';
+import { MdOutlineLocalShipping, MdOutlineSupportAgent, MdOutlineDevices } from 'react-icons/md';
 import { FaArrowRight } from 'react-icons/fa6';
 import LaptopCard from './LaptopCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
 
-const BRANDS = ['Samsung', 'Google', 'Xiaomi'];
+const BRANDS = ['Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus'];
 
 const VALUE_ICONS = [
   <IoShieldCheckmarkOutline key="shield" size={26} aria-hidden="true" />,
@@ -24,11 +24,11 @@ const Hero = () => {
   const [subscribed, setSubscribed] = useState(false);
 
   const categories = [
+    { id: 'iphone', name: t.home.categories.iphone, icon: <IoPhonePortraitOutline aria-hidden="true" />, route: '/iPhones' },
+    { id: 'android', name: t.home.categories.android, icon: <IoPhonePortraitOutline aria-hidden="true" />, route: '/Android' },
+    { id: 'watch', name: t.home.categories.watch, icon: <IoWatchOutline aria-hidden="true" />, route: '/Watches' },
     { id: 'foldable', name: t.home.categories.foldable, icon: <MdOutlineDevices aria-hidden="true" />, route: '/Foldables' },
-    { id: 'flagship', name: t.home.categories.flagship, icon: <IoPhonePortraitOutline aria-hidden="true" />, route: '/Flagships' },
-    { id: 'camera', name: t.home.categories.camera, icon: <IoCameraOutline aria-hidden="true" />, route: '/Camera' },
-    { id: 'compact', name: t.home.categories.compact, icon: <IoPhonePortraitOutline aria-hidden="true" />, route: '/Deals' },
-    { id: 'budget', name: t.home.categories.budget, icon: <MdOutlineLocalOffer aria-hidden="true" />, route: '/Deals' },
+    { id: 'vision', name: t.home.categories.vision, icon: <IoEyeOutline aria-hidden="true" />, route: '/Vision' },
   ];
 
   const handleCategoryClick = (categoryId) => {
@@ -188,7 +188,7 @@ const Hero = () => {
             <h2 id="more-brands-heading" className="section-title">
               {t.home.pixelXiaomiHeading}
             </h2>
-            <Link to="/Flagships" className="section-link">
+            <Link to="/Android" className="section-link">
               {t.home.seeAllFlagships} <FaArrowRight size={13} aria-hidden="true" />
             </Link>
           </div>

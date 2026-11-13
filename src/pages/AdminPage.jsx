@@ -9,7 +9,7 @@ const EMPTY_FORM = {
   brand: 'Samsung',
   year: String(new Date().getFullYear()),
   price: '',
-  type: 'flagship',
+  type: 'android',
   image: '',
   description: '',
   processor: '',
@@ -174,11 +174,11 @@ const AdminPage = () => {
               <label className="admin-field">
                 <span>{t.admin.type}</span>
                 <select name="type" value={form.type} onChange={handleChange}>
-                  <option value="flagship">{t.home.categories.flagship}</option>
+                  <option value="iphone">{t.home.categories.iphone}</option>
+                  <option value="android">{t.home.categories.android}</option>
+                  <option value="watch">{t.home.categories.watch}</option>
                   <option value="foldable">{t.home.categories.foldable}</option>
-                  <option value="camera">{t.home.categories.camera}</option>
-                  <option value="compact">{t.home.categories.compact}</option>
-                  <option value="budget">{t.home.categories.budget}</option>
+                  <option value="vision">{t.home.categories.vision}</option>
                 </select>
               </label>
 

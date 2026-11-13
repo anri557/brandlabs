@@ -16,9 +16,10 @@ const Navbar = () => {
 
   const categoryLinks = [
     { to: '/', label: t.nav.home },
-    { to: '/Foldables', label: t.nav.foldables },
-    { to: '/Flagships', label: t.nav.flagships },
-    { to: '/Camera', label: t.nav.camera },
+    { to: '/iPhones', label: t.nav.iphones },
+    { to: '/Android', label: t.nav.android },
+    { to: '/Watches', label: t.nav.watches },
+    { to: '/Vision', label: t.nav.vision },
     { to: '/Deals', label: t.nav.deals },
   ];
 

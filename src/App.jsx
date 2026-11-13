@@ -28,16 +28,24 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/laptop/:slug" element={<LaptopDetailPage />} />
               <Route
+                path="/iPhones"
+                element={<CatalogPage key="iphone" pageKey="iphones" defaultType="iphone" />}
+              />
+              <Route
+                path="/Android"
+                element={<CatalogPage key="android" pageKey="android" defaultType="android" />}
+              />
+              <Route
+                path="/Watches"
+                element={<CatalogPage key="watch" pageKey="watches" defaultType="watch" />}
+              />
+              <Route
                 path="/Foldables"
                 element={<CatalogPage key="foldable" pageKey="foldables" defaultType="foldable" />}
               />
               <Route
-                path="/Flagships"
-                element={<CatalogPage key="flagship" pageKey="flagships" defaultType="flagship" />}
-              />
-              <Route
-                path="/Camera"
-                element={<CatalogPage key="camera" pageKey="camera" defaultType="camera" />}
+                path="/Vision"
+                element={<CatalogPage key="vision" pageKey="vision" defaultType="vision" />}
               />
               <Route
                 path="/Deals"

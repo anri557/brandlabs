@@ -15,11 +15,11 @@ const Footer = () => {
         <div>
           <h3 className="site-footer__heading">{t.footer.explore}</h3>
           <ul className="site-footer__links">
-            <li><Link to="/">{t.footer.home}</Link></li>
-            <li><Link to="/Foldables">{t.footer.foldables}</Link></li>
-            <li><Link to="/Flagships">{t.footer.flagships}</Link></li>
-            <li><Link to="/Camera">{t.footer.camera}</Link></li>
-            <li><Link to="/Deals">{t.footer.deals}</Link></li>
+            <li><Link to="/">{t.nav.home}</Link></li>
+            <li><Link to="/iPhones">{t.nav.iphones}</Link></li>
+            <li><Link to="/Android">{t.nav.android}</Link></li>
+            <li><Link to="/Watches">{t.nav.watches}</Link></li>
+            <li><Link to="/Vision">{t.nav.vision}</Link></li>
           </ul>
         </div>
 

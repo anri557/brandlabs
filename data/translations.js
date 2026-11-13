@@ -11,10 +11,11 @@ export const translations = {
     languageLabel: 'Language',
     nav: {
       home: 'Home',
-      foldables: 'Foldables',
-      flagships: 'Flagships',
-      camera: 'Camera Phones',
-      deals: 'All Phones',
+      iphones: 'iPhones',
+      android: 'Android',
+      watches: 'Watches',
+      vision: 'Vision Pro',
+      deals: 'All Products',
     },
     home: {
       heroEyebrow: 'I LAB MOBILE LAB',
@@ -39,11 +40,11 @@ export const translations = {
       subscribe: 'Subscribe',
       subscribed: 'You are subscribed. Thank you for joining I Lab updates.',
       categories: {
+        iphone: 'iPhones',
+        android: 'Android Phones',
+        watch: 'Smartwatches',
         foldable: 'Foldables',
-        flagship: 'Flagships',
-        camera: 'Camera Phones',
-        compact: 'Compact',
-        budget: 'Budget',
+        vision: 'Vision Pro',
       },
       valueProps: [
         {
@@ -105,21 +106,29 @@ export const translations = {
       noMatchesText: 'Try clearing one of the filters or browsing all available models.',
       resetFilters: 'Reset Filters',
       pages: {
+        iphones: {
+          title: 'Apple iPhones',
+          subtitle: 'Latest iPhone Pro and standard models with official 1-year warranty.',
+        },
+        android: {
+          title: 'Android Smartphones',
+          subtitle: 'Samsung Galaxy, Google Pixel, OnePlus, and Xiaomi flagship phones.',
+        },
+        watches: {
+          title: 'Smartwatches',
+          subtitle: 'Apple Watch, Galaxy Watch, and Pixel Watch wearables.',
+        },
         foldables: {
           title: 'Foldable Smartphones',
           subtitle: 'Expansive flexible AMOLED screens and multitasking powerhouses.',
         },
-        flagships: {
-          title: 'Flagship Smartphones',
-          subtitle: 'Top-tier Snapdragon and Tensor performance with pro camera systems.',
-        },
-        camera: {
-          title: 'Camera-First Phones',
-          subtitle: 'Computational photography and Leica optics built for creators.',
+        vision: {
+          title: 'Apple Vision Pro',
+          subtitle: 'Spatial computing headsets and accessories.',
         },
         deals: {
-          title: 'All Smartphones',
-          subtitle: 'Browse our complete lineup of Samsung, Google Pixel, and Xiaomi smartphones.',
+          title: 'All Products',
+          subtitle: 'Browse our complete lineup of phones, smartwatches, and Vision Pro.',
         },
       },
     },
@@ -220,10 +229,11 @@ export const translations = {
     languageLabel: 'ენა',
     nav: {
       home: 'მთავარი',
-      foldables: 'დასაკეცი',
-      flagships: 'ფლაგმანები',
-      camera: 'კამერაფონები',
-      deals: 'ყველა სმარტფონი',
+      iphones: 'iPhone',
+      android: 'Android',
+      watches: 'საათები',
+      vision: 'Vision Pro',
+      deals: 'ყველა პროდუქტი',
     },
     home: {
       heroEyebrow: 'I LAB მობაილ ლაბი',
@@ -248,11 +258,11 @@ export const translations = {
       subscribe: 'გამოწერა',
       subscribed: 'თქვენ წარმატებით გამოიწერეთ I Lab-ის განახლებები.',
       categories: {
+        iphone: 'iPhone-ები',
+        android: 'Android სმარტფონები',
+        watch: 'სმარტ საათები',
         foldable: 'დასაკეცი',
-        flagship: 'ფლაგმანები',
-        camera: 'კამერაფონები',
-        compact: 'კომპაქტური',
-        budget: 'ბიუჯეტური',
+        vision: 'Vision Pro',
       },
       valueProps: [
         {
@@ -314,21 +324,29 @@ export const translations = {
       noMatchesText: 'სცადეთ ფილტრების გასუფთავება ან ყველა მოდელის ნახვა.',
       resetFilters: 'ფილტრების გასუფთავება',
       pages: {
+        iphones: {
+          title: 'Apple iPhone-ები',
+          subtitle: 'უახლესი iPhone მოდელები 1-წლიანი ოფიციალური გარანტიით.',
+        },
+        android: {
+          title: 'Android სმარტფონები',
+          subtitle: 'Samsung Galaxy, Google Pixel, OnePlus და Xiaomi-ს ფლაგმანები.',
+        },
+        watches: {
+          title: 'სმარტ საათები',
+          subtitle: 'Apple Watch, Galaxy Watch და სხვა სმარტ საათები.',
+        },
         foldables: {
           title: 'დასაკეცი სმარტფონები',
           subtitle: 'დიდი მოქნილი AMOLED ეკრანები და მულტითასქინგის მაქსიმალური შესაძლებლობები.',
         },
-        flagships: {
-          title: 'ფლაგმანური სმარტფონები',
-          subtitle: 'უმაღლესი წარმადობის Snapdragon და Tensor სმარტფონები პროფესიონალური კამერებით.',
-        },
-        camera: {
-          title: 'კამერაფონები',
-          subtitle: 'გამორჩეული ფოტო და ვიდეო შესაძლებლობები Leica-სა და Google AI-ს ოპტიკით.',
+        vision: {
+          title: 'Apple Vision Pro',
+          subtitle: 'სივრცითი კომპიუტერული მოწყობილობები და აქსესუარები.',
         },
         deals: {
-          title: 'ყველა სმარტფონი',
-          subtitle: 'დაათვალიერეთ Samsung, Google Pixel და Xiaomi-ს სრული ასორტიმენტი.',
+          title: 'ყველა პროდუქტი',
+          subtitle: 'დაათვალიერეთ სმარტფონები, სმარტ საათები და Vision Pro.',
         },
       },
     },

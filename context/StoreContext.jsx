@@ -20,13 +20,13 @@ const toSlug = (text) =>
     .replace(/^-+|-+$/g, '');
 
 export const StoreProvider = ({ children }) => {
-  const [products, setProducts] = useState(() => readStorage('ilab_products_v1', defaultLaptops));
+  const [products, setProducts] = useState(() => readStorage('ilab_products_v2', defaultLaptops));
   const [cart, setCart] = useState(() => readStorage('ilab_cart_v1', []));
   const [wishlist, setWishlist] = useState(() => readStorage('ilab_wishlist_v1', []));
 
   useEffect(() => {
     try {
-      localStorage.setItem('ilab_products_v1', JSON.stringify(products));
+      localStorage.setItem('ilab_products_v2', JSON.stringify(products));
     } catch {
       // ignore storage errors
     }

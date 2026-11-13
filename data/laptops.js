@@ -35,7 +35,7 @@ const laptops = [
       graphics: 'Adreno 830 GPU',
       battery: '5000mAh · 45W Fast Charge'
     },
-    type: 'flagship'
+    type: 'android'
   },
   {
     id: 3,
@@ -54,7 +54,7 @@ const laptops = [
       graphics: 'Custom Tensor GPU',
       battery: '4950mAh · 37W Fast Charge'
     },
-    type: 'camera'
+    type: 'android'
   },
   {
     id: 4,
@@ -73,7 +73,7 @@ const laptops = [
       graphics: 'Adreno 830 GPU',
       battery: '5410mAh · 90W HyperCharge'
     },
-    type: 'flagship'
+    type: 'android'
   }
 ];
 

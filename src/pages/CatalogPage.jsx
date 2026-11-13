@@ -4,7 +4,7 @@ import LaptopCard from '../../components/LaptopCard';
 import { useLanguage } from '../../context/LanguageContext';
 import { useStore } from '../../context/StoreContext';
 
-const BRANDS = ['All', 'Samsung', 'Google', 'Xiaomi'];
+const BRANDS = ['All', 'Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus'];
 
 const CatalogPage = ({ pageKey = 'deals', defaultType = 'all' }) => {
   const { t } = useLanguage();
@@ -21,11 +21,11 @@ const CatalogPage = ({ pageKey = 'deals', defaultType = 'all' }) => {
 
   const types = [
     { id: 'all', label: t.catalog.allTypes },
+    { id: 'iphone', label: t.home.categories.iphone },
+    { id: 'android', label: t.home.categories.android },
+    { id: 'watch', label: t.home.categories.watch },
     { id: 'foldable', label: t.home.categories.foldable },
-    { id: 'flagship', label: t.home.categories.flagship },
-    { id: 'camera', label: t.home.categories.camera },
-    { id: 'compact', label: t.home.categories.compact },
-    { id: 'budget', label: t.home.categories.budget },
+    { id: 'vision', label: t.home.categories.vision },
   ];
 
   const filtered = useMemo(() => {
