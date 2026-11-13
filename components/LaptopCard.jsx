@@ -6,7 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 
 const LaptopCard = ({ laptop }) => {
   const { addToCart, toggleWishlist, isInWishlist } = useStore();
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const [added, setAdded] = useState(false);
   const wishlisted = isInWishlist(laptop.id);
 
@@ -22,16 +22,28 @@ const LaptopCard = ({ laptop }) => {
     toggleWishlist(laptop);
   };
 
+  const handleImgError = (e) => {
+    e.currentTarget.src = '/technolab_georgia.jpg';
+  };
+
+  const devices =
+    Array.isArray(laptop.compatibleWith) && laptop.compatibleWith.length > 0
+      ? laptop.compatibleWith
+      : ['iPhone', 'Samsung', 'Xiaomi'];
+
   return (
     <article className="product-card">
       <div className="product-card__media-wrap">
         <Link to={`/laptop/${laptop.slug}`} className="product-card__media-link" aria-label={laptop.name}>
-          <img
-            src={laptop.image}
-            alt={laptop.name}
-            loading="lazy"
-            className="product-card__img"
-          />
+          <div className="product-card__img-stage">
+            <img
+              src={laptop.image}
+              alt={laptop.name}
+              loading="lazy"
+              onError={handleImgError}
+              className="product-card__img"
+            />
+          </div>
         </Link>
         <button
           type="button"
@@ -47,24 +59,34 @@ const LaptopCard = ({ laptop }) => {
       <div className="product-card__body">
         <div className="product-card__meta">
           <span className="product-card__brand">{laptop.brand}</span>
-          <span className="product-card__year">{laptop.year}</span>
+          <span className="product-card__stock">
+            {lang === 'en' ? 'In Stock' : 'მარაგშია'}
+          </span>
         </div>
 
         <h3 className="product-card__title">
           <Link to={`/laptop/${laptop.slug}`}>{laptop.name}</Link>
         </h3>
 
+        <div className="product-card__compat" aria-label="Compatible devices">
+          {devices.map((device) => (
+            <span key={device} className="product-card__compat-pill">
+              {device}
+            </span>
+          ))}
+        </div>
+
         <p className="product-card__specs">
-          {laptop.specs.processor} · {laptop.specs.memory} · {laptop.specs.storage} · {laptop.specs.graphics}
+          {laptop.specs.processor} · {laptop.specs.memory}
         </p>
 
         <div className="product-card__footer">
-          <span className="product-card__price">{laptop.price.toLocaleString()} ლ</span>
+          <span className="product-card__price">{laptop.price.toLocaleString()} ₾</span>
           <button
             type="button"
             className={`product-card__cart-btn${added ? ' is-added' : ''}`}
             onClick={handleAdd}
-            aria-label={`Add ${laptop.name} to cart`}
+            aria-label={`${t.card.add} — ${laptop.name}`}
           >
             {added ? <FaCheck aria-hidden="true" /> : <FaCartShopping aria-hidden="true" />}
             <span>{added ? t.card.added : t.card.add}</span>

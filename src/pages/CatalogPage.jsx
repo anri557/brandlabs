@@ -4,14 +4,14 @@ import LaptopCard from '../../components/LaptopCard';
 import { useLanguage } from '../../context/LanguageContext';
 import { useStore } from '../../context/StoreContext';
 
-const BRANDS = ['All', 'Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus'];
+const DEVICES = ['All', 'iPhone', 'Samsung', 'Xiaomi'];
 
 const CatalogPage = ({ pageKey = 'deals', defaultType = 'all' }) => {
   const { t } = useLanguage();
-  const { products: laptops } = useStore();
+  const { products } = useStore();
   const [searchParams, setSearchParams] = useSearchParams();
-  const brandParam = searchParams.get('brand');
-  const selectedBrand = brandParam && BRANDS.includes(brandParam) ? brandParam : 'All';
+  const deviceParam = searchParams.get('device');
+  const selectedDevice = deviceParam && DEVICES.includes(deviceParam) ? deviceParam : 'All';
   const queryParam = searchParams.get('q') || '';
 
   const [selectedType, setSelectedType] = useState(defaultType);
@@ -21,24 +21,27 @@ const CatalogPage = ({ pageKey = 'deals', defaultType = 'all' }) => {
 
   const types = [
     { id: 'all', label: t.catalog.allTypes },
-    { id: 'iphone', label: t.home.categories.iphone },
-    { id: 'android', label: t.home.categories.android },
-    { id: 'watch', label: t.home.categories.watch },
-    { id: 'foldable', label: t.home.categories.foldable },
-    { id: 'vision', label: t.home.categories.vision },
+    { id: 'chargers', label: t.home.categories.chargers },
+    { id: 'cases', label: t.home.categories.cases },
+    { id: 'powerbanks', label: t.home.categories.powerbanks },
+    { id: 'screen-protectors', label: t.home.categories['screen-protectors'] },
   ];
 
   const filtered = useMemo(() => {
     const q = queryParam.trim().toLowerCase();
-    let list = laptops.filter((item) => {
-      const matchesBrand = selectedBrand === 'All' || item.brand === selectedBrand;
+    let list = products.filter((item) => {
+      const matchesDevice =
+        selectedDevice === 'All' ||
+        (Array.isArray(item.compatibleWith) && item.compatibleWith.includes(selectedDevice)) ||
+        item.specs.storage.toLowerCase().includes(selectedDevice.toLowerCase());
       const matchesType = selectedType === 'all' || item.type === selectedType;
       const matchesQuery =
         !q ||
         item.name.toLowerCase().includes(q) ||
         item.brand.toLowerCase().includes(q) ||
+        item.specs.storage.toLowerCase().includes(q) ||
         item.specs.processor.toLowerCase().includes(q);
-      return matchesBrand && matchesType && matchesQuery;
+      return matchesDevice && matchesType && matchesQuery;
     });
 
     if (sortBy === 'price-asc') {
@@ -49,14 +52,14 @@ const CatalogPage = ({ pageKey = 'deals', defaultType = 'all' }) => {
       list = [...list].sort((a, b) => b.year - a.year);
     }
     return list;
-  }, [laptops, selectedBrand, selectedType, sortBy, queryParam]);
+  }, [products, selectedDevice, selectedType, sortBy, queryParam]);
 
-  const handleBrandChange = (brand) => {
+  const handleDeviceChange = (device) => {
     const next = new URLSearchParams(searchParams);
-    if (brand === 'All') {
-      next.delete('brand');
+    if (device === 'All') {
+      next.delete('device');
     } else {
-      next.set('brand', brand);
+      next.set('device', device);
     }
     setSearchParams(next, { replace: true });
   };
@@ -89,17 +92,17 @@ const CatalogPage = ({ pageKey = 'deals', defaultType = 'all' }) => {
         </div>
       </div>
 
-      <div className="catalog-filters" aria-label="Filter laptops">
-        <div className="filter-group" role="group" aria-label="Filter by brand">
-          {BRANDS.map((brand) => (
+      <div className="catalog-filters" aria-label="Filter accessories">
+        <div className="filter-group" role="group" aria-label="Filter by compatible device">
+          {DEVICES.map((device) => (
             <button
-              key={brand}
+              key={device}
               type="button"
-              onClick={() => handleBrandChange(brand)}
-              className={`filter-pill${selectedBrand === brand ? ' is-active' : ''}`}
-              aria-pressed={selectedBrand === brand}
+              onClick={() => handleDeviceChange(device)}
+              className={`filter-pill${selectedDevice === device ? ' is-active' : ''}`}
+              aria-pressed={selectedDevice === device}
             >
-              {brand === 'All' ? t.catalog.allBrands : brand}
+              {device === 'All' ? t.catalog.allBrands : device}
             </button>
           ))}
         </div>
@@ -121,8 +124,8 @@ const CatalogPage = ({ pageKey = 'deals', defaultType = 'all' }) => {
 
       {filtered.length > 0 ? (
         <div className="product-grid">
-          {filtered.map((laptop) => (
-            <LaptopCard key={laptop.id} laptop={laptop} />
+          {filtered.map((item) => (
+            <LaptopCard key={item.id} laptop={item} />
           ))}
         </div>
       ) : (

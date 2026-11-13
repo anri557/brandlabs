@@ -6,18 +6,18 @@ import { useLanguage } from '../../context/LanguageContext';
 
 const EMPTY_FORM = {
   name: '',
-  brand: 'Samsung',
+  brand: 'Baseus',
   year: String(new Date().getFullYear()),
   price: '',
-  type: 'android',
+  type: 'chargers',
   image: '',
   description: '',
   processor: '',
   memory: '',
-  storage: '',
+  storage: 'iPhone / Samsung / Xiaomi',
   display: '',
   graphics: '',
-  battery: '',
+  battery: '1 წლიანი გარანტია',
 };
 
 const AdminPage = () => {
@@ -48,8 +48,7 @@ const AdminPage = () => {
       price: form.price,
       type: form.type,
       image:
-        form.image.trim() ||
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0-yTo6B22UWDl0yywBupEUqSUU7nhsvTOnWCVh7DELA&s=10',
+        form.image.trim() || '/technolab_georgia.jpg',
       description: form.description,
       specs: {
         processor: form.processor || '—',
@@ -138,11 +137,11 @@ const AdminPage = () => {
               <label className="admin-field">
                 <span>{t.admin.brand}</span>
                 <select name="brand" value={form.brand} onChange={handleChange}>
-                  <option value="Samsung">Samsung</option>
-                  <option value="Google">Google</option>
-                  <option value="Xiaomi">Xiaomi</option>
-                  <option value="Apple">Apple</option>
-                  <option value="OnePlus">OnePlus</option>
+                  <option value="Baseus">Baseus</option>
+                  <option value="Hoco">Hoco</option>
+                  <option value="Borofone">Borofone</option>
+                  <option value="Remax">Remax</option>
+                  <option value="Vidvie">Vidvie</option>
                 </select>
               </label>
 
@@ -174,11 +173,10 @@ const AdminPage = () => {
               <label className="admin-field">
                 <span>{t.admin.type}</span>
                 <select name="type" value={form.type} onChange={handleChange}>
-                  <option value="iphone">{t.home.categories.iphone}</option>
-                  <option value="android">{t.home.categories.android}</option>
-                  <option value="watch">{t.home.categories.watch}</option>
-                  <option value="foldable">{t.home.categories.foldable}</option>
-                  <option value="vision">{t.home.categories.vision}</option>
+                  <option value="chargers">{t.home.categories.chargers}</option>
+                  <option value="cases">{t.home.categories.cases}</option>
+                  <option value="powerbanks">{t.home.categories.powerbanks}</option>
+                  <option value="screen-protectors">{t.home.categories['screen-protectors']}</option>
                 </select>
               </label>
 
@@ -298,7 +296,7 @@ const AdminPage = () => {
                     {product.name}
                   </Link>
                   <span className="admin-item__meta">
-                    {product.brand} · {product.year} · {product.price.toLocaleString()} ლ
+                    {product.brand} · {product.year} · {product.price.toLocaleString()} ₾
                   </span>
                 </div>
                 <div className="admin-item__actions">

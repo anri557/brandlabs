@@ -73,6 +73,9 @@ const LaptopDetailPage = () => {
             src={laptop.image}
             alt={laptop.name}
             fetchpriority="high"
+            onError={(e) => {
+              e.currentTarget.src = '/technolab_georgia.jpg';
+            }}
             className="detail-media__img"
           />
         </div>
@@ -87,7 +90,7 @@ const LaptopDetailPage = () => {
           </div>
 
           <h1 className="detail-info__title">{laptop.name}</h1>
-          <p className="detail-info__price">{laptop.price.toLocaleString()} ლ</p>
+          <p className="detail-info__price">{laptop.price.toLocaleString()} ₾</p>
           <p className="detail-info__desc">{laptop.description}</p>
 
           <div className="detail-highlights">

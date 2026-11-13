@@ -87,7 +87,7 @@ const CartPage = () => {
                 </div>
 
                 <span className="cart-item__price">
-                  {(item.price * item.quantity).toLocaleString()} ლ
+                  {(item.price * item.quantity).toLocaleString()} ₾
                 </span>
 
                 <button
@@ -107,7 +107,7 @@ const CartPage = () => {
           <h2 className="cart-summary__title">{t.cartPage.summaryTitle}</h2>
           <div className="cart-summary__row">
             <span>{t.cartPage.subtotal}</span>
-            <span>{cartSubtotal.toLocaleString()} ლ</span>
+            <span>{cartSubtotal.toLocaleString()} ₾</span>
           </div>
           <div className="cart-summary__row">
             <span>{t.cartPage.shipping}</span>
@@ -115,7 +115,7 @@ const CartPage = () => {
           </div>
           <div className="cart-summary__total">
             <span>{t.cartPage.total}</span>
-            <span>{cartSubtotal.toLocaleString()} ლ</span>
+            <span>{cartSubtotal.toLocaleString()} ₾</span>
           </div>
           <button type="button" className="btn-primary cart-summary__btn" onClick={handleCheckout}>
             {t.cartPage.completeOrder}

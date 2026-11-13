@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import defaultLaptops from '../data/laptops.js';
 
 const StoreContext = createContext(null);
@@ -19,22 +19,28 @@ const toSlug = (text) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
+const EMPTY_OPS = { custom: [], edited: {}, deleted: [] };
+
 export const StoreProvider = ({ children }) => {
-  const [products, setProducts] = useState(() => readStorage('ilab_products_v2', defaultLaptops));
-  const [cart, setCart] = useState(() => readStorage('ilab_cart_v1', []));
-  const [wishlist, setWishlist] = useState(() => readStorage('ilab_wishlist_v1', []));
+  const [catalogOps, setCatalogOps] = useState(() => readStorage('tl_catalog_ops_v1', EMPTY_OPS));
+  const [cart, setCart] = useState(() => readStorage('tl_cart_v1', []));
+  const [wishlist, setWishlist] = useState(() => readStorage('tl_wishlist_v1', []));
+  const [cartOpen, setCartOpen] = useState(false);
+
+  const openCart = () => setCartOpen(true);
+  const closeCart = () => setCartOpen(false);
 
   useEffect(() => {
     try {
-      localStorage.setItem('ilab_products_v2', JSON.stringify(products));
+      localStorage.setItem('tl_catalog_ops_v1', JSON.stringify(catalogOps));
     } catch {
       // ignore storage errors
     }
-  }, [products]);
+  }, [catalogOps]);
 
   useEffect(() => {
     try {
-      localStorage.setItem('ilab_cart_v1', JSON.stringify(cart));
+      localStorage.setItem('tl_cart_v1', JSON.stringify(cart));
     } catch {
       // ignore storage errors
     }
@@ -42,21 +48,58 @@ export const StoreProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      localStorage.setItem('ilab_wishlist_v1', JSON.stringify(wishlist));
+      localStorage.setItem('tl_wishlist_v1', JSON.stringify(wishlist));
     } catch {
       // ignore storage errors
     }
   }, [wishlist]);
 
+  const products = useMemo(() => {
+    const base = defaultLaptops
+      .filter((item) => !catalogOps.deleted.includes(item.id))
+      .map((item) => (catalogOps.edited[item.id] ? { ...item, ...catalogOps.edited[item.id] } : item));
+    return [...catalogOps.custom, ...base];
+  }, [catalogOps]);
+
   const addProduct = (data) => {
     const nextId = products.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1;
-    const baseSlug = toSlug(`${data.brand} ${data.name}`) || `laptop-${nextId}`;
+    const baseSlug = toSlug(`${data.brand} ${data.name}`) || `product-${nextId}`;
     const slugExists = products.some((item) => item.slug === baseSlug);
     const slug = slugExists ? `${baseSlug}-${nextId}` : baseSlug;
 
     const newProduct = {
       id: nextId,
       slug,
+      year: Number(data.year) || new Date().getFullYear(),
+      brand: data.brand.trim(),
+      name: data.name.trim(),
+      image: data.image.trim(),
+      price: Number(data.price) || 0,
+      compatibleWith:
+        Array.isArray(data.compatibleWith) && data.compatibleWith.length > 0
+          ? data.compatibleWith
+          : ['iPhone', 'Samsung', 'Xiaomi'],
+      description: data.description.trim(),
+      type: data.type,
+      specs: {
+        processor: data.specs.processor.trim(),
+        memory: data.specs.memory.trim(),
+        storage: data.specs.storage.trim(),
+        display: data.specs.display.trim(),
+        graphics: data.specs.graphics.trim(),
+        battery: data.specs.battery.trim(),
+      },
+    };
+
+    setCatalogOps((prev) => ({
+      ...prev,
+      custom: [newProduct, ...prev.custom],
+    }));
+    return newProduct;
+  };
+
+  const updateProduct = (id, data) => {
+    const patch = {
       year: Number(data.year) || new Date().getFullYear(),
       brand: data.brand.trim(),
       name: data.name.trim(),
@@ -74,44 +117,41 @@ export const StoreProvider = ({ children }) => {
       },
     };
 
-    setProducts((prev) => [newProduct, ...prev]);
-    return newProduct;
-  };
-
-  const updateProduct = (id, data) => {
-    setProducts((prev) =>
-      prev.map((item) => {
-        if (item.id !== id) return item;
+    setCatalogOps((prev) => {
+      const isCustom = prev.custom.some((item) => item.id === id);
+      if (isCustom) {
         return {
-          ...item,
-          year: Number(data.year) || item.year,
-          brand: data.brand.trim(),
-          name: data.name.trim(),
-          image: data.image.trim(),
-          price: Number(data.price) || 0,
-          description: data.description.trim(),
-          type: data.type,
-          specs: {
-            processor: data.specs.processor.trim(),
-            memory: data.specs.memory.trim(),
-            storage: data.specs.storage.trim(),
-            display: data.specs.display.trim(),
-            graphics: data.specs.graphics.trim(),
-            battery: data.specs.battery.trim(),
-          },
+          ...prev,
+          custom: prev.custom.map((item) => (item.id === id ? { ...item, ...patch } : item)),
         };
-      })
-    );
+      }
+      return {
+        ...prev,
+        edited: { ...prev.edited, [id]: patch },
+      };
+    });
   };
 
   const deleteProduct = (id) => {
-    setProducts((prev) => prev.filter((item) => item.id !== id));
+    setCatalogOps((prev) => {
+      const isCustom = prev.custom.some((item) => item.id === id);
+      if (isCustom) {
+        return {
+          ...prev,
+          custom: prev.custom.filter((item) => item.id !== id),
+        };
+      }
+      return {
+        ...prev,
+        deleted: prev.deleted.includes(id) ? prev.deleted : [...prev.deleted, id],
+      };
+    });
     setCart((prev) => prev.filter((item) => item.id !== id));
     setWishlist((prev) => prev.filter((item) => item.id !== id));
   };
 
   const resetProducts = () => {
-    setProducts(defaultLaptops);
+    setCatalogOps(EMPTY_OPS);
   };
 
   const addToCart = (laptop, quantity = 1) => {
@@ -164,6 +204,9 @@ export const StoreProvider = ({ children }) => {
         wishlist,
         cartCount,
         cartSubtotal,
+        cartOpen,
+        openCart,
+        closeCart,
         addToCart,
         updateCartQuantity,
         removeFromCart,

@@ -3,6 +3,7 @@ import { StoreProvider } from '../context/StoreContext';
 import { LanguageProvider } from '../context/LanguageContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import CartDrawer from '../components/CartDrawer';
 import Hero from '../components/Hero.jsx';
 import LaptopDetailPage from './pages/LaptopDetailPage';
 import CatalogPage from './pages/CatalogPage';
@@ -28,24 +29,26 @@ const App = () => {
               <Route path="/" element={<Home />} />
               <Route path="/laptop/:slug" element={<LaptopDetailPage />} />
               <Route
-                path="/iPhones"
-                element={<CatalogPage key="iphone" pageKey="iphones" defaultType="iphone" />}
+                path="/Chargers"
+                element={<CatalogPage key="chargers" pageKey="chargers" defaultType="chargers" />}
               />
               <Route
-                path="/Android"
-                element={<CatalogPage key="android" pageKey="android" defaultType="android" />}
+                path="/Cases"
+                element={<CatalogPage key="cases" pageKey="cases" defaultType="cases" />}
               />
               <Route
-                path="/Watches"
-                element={<CatalogPage key="watch" pageKey="watches" defaultType="watch" />}
+                path="/PowerBanks"
+                element={<CatalogPage key="powerbanks" pageKey="powerbanks" defaultType="powerbanks" />}
               />
               <Route
-                path="/Foldables"
-                element={<CatalogPage key="foldable" pageKey="foldables" defaultType="foldable" />}
-              />
-              <Route
-                path="/Vision"
-                element={<CatalogPage key="vision" pageKey="vision" defaultType="vision" />}
+                path="/ScreenProtectors"
+                element={
+                  <CatalogPage
+                    key="screen-protectors"
+                    pageKey="screenProtectors"
+                    defaultType="screen-protectors"
+                  />
+                }
               />
               <Route
                 path="/Deals"
@@ -60,6 +63,7 @@ const App = () => {
             </Routes>
           </div>
           <Footer />
+          <CartDrawer />
         </div>
       </StoreProvider>
     </LanguageProvider>

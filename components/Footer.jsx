@@ -8,7 +8,16 @@ const Footer = () => {
     <footer className="site-footer">
       <div className="container site-footer__grid">
         <div>
-          <h2 className="site-footer__brand">{t.brandName}</h2>
+          <Link to="/" className="site-footer__brand-wrap">
+            <img
+              src="/technolab_georgia.jpg"
+              alt={t.brandName}
+              width="44"
+              height="44"
+              className="site-footer__logo"
+            />
+            <h2 className="site-footer__brand">{t.brandName}</h2>
+          </Link>
           <p className="site-footer__desc">{t.footer.desc}</p>
         </div>
 
@@ -16,10 +25,10 @@ const Footer = () => {
           <h3 className="site-footer__heading">{t.footer.explore}</h3>
           <ul className="site-footer__links">
             <li><Link to="/">{t.nav.home}</Link></li>
-            <li><Link to="/iPhones">{t.nav.iphones}</Link></li>
-            <li><Link to="/Android">{t.nav.android}</Link></li>
-            <li><Link to="/Watches">{t.nav.watches}</Link></li>
-            <li><Link to="/Vision">{t.nav.vision}</Link></li>
+            <li><Link to="/Chargers">{t.nav.chargers}</Link></li>
+            <li><Link to="/Cases">{t.nav.cases}</Link></li>
+            <li><Link to="/PowerBanks">{t.nav.powerbanks}</Link></li>
+            <li><Link to="/ScreenProtectors">{t.nav.screenProtectors}</Link></li>
           </ul>
         </div>
 
@@ -36,18 +45,9 @@ const Footer = () => {
         <div>
           <h3 className="site-footer__heading">{t.footer.support}</h3>
           <ul className="site-footer__links">
-            <li><a href="tel:+995555910817">+995 555 91 08 17</a></li>
             <li><span>{t.footer.address}</span></li>
             <li><span>{t.footer.warranty}</span></li>
-            <li>
-              <a
-                href="https://www.instagram.com/brandlaptops7/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Instagram: {t.footer.instagram}
-              </a>
-            </li>
+            <li><span>iPhone · Samsung · Xiaomi</span></li>
           </ul>
         </div>
       </div>

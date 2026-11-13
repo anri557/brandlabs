@@ -5,10 +5,10 @@ const LanguageContext = createContext(null);
 
 const readInitialLang = () => {
   try {
-    const saved = localStorage.getItem('bl_lang');
-    return saved === 'ka' ? 'ka' : 'en';
+    const saved = localStorage.getItem('tl_lang_v1');
+    return saved === 'en' ? 'en' : 'ka';
   } catch {
-    return 'en';
+    return 'ka';
   }
 };
 
@@ -18,13 +18,13 @@ export const LanguageProvider = ({ children }) => {
   useEffect(() => {
     document.documentElement.lang = lang;
     try {
-      localStorage.setItem('bl_lang', lang);
+      localStorage.setItem('tl_lang_v1', lang);
     } catch {
       // ignore storage errors
     }
   }, [lang]);
 
-  const t = translations[lang] || translations.en;
+  const t = translations[lang] || translations.ka;
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, t }}>
@@ -41,4 +41,3 @@ export const useLanguage = () => {
   }
   return ctx;
 };
-

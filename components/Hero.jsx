@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IoPhonePortraitOutline, IoShieldCheckmarkOutline, IoFlashOutline, IoWatchOutline, IoEyeOutline } from 'react-icons/io5';
-import { MdOutlineLocalShipping, MdOutlineSupportAgent, MdOutlineDevices } from 'react-icons/md';
+import {
+  IoFlashOutline,
+  IoShieldCheckmarkOutline,
+  IoPhonePortraitOutline,
+  IoBatteryChargingOutline,
+} from 'react-icons/io5';
+import { MdOutlineLocalShipping, MdOutlineSupportAgent, MdOutlineCable } from 'react-icons/md';
 import { FaArrowRight } from 'react-icons/fa6';
 import LaptopCard from './LaptopCard';
 import { useLanguage } from '../context/LanguageContext';
 import { useStore } from '../context/StoreContext';
 
-const BRANDS = ['Apple', 'Samsung', 'Google', 'Xiaomi', 'OnePlus'];
+const COMPATIBILITY_BRANDS = ['iPhone', 'Samsung', 'Xiaomi'];
 
 const VALUE_ICONS = [
   <IoShieldCheckmarkOutline key="shield" size={26} aria-hidden="true" />,
@@ -20,28 +25,46 @@ const Hero = () => {
   const { t } = useLanguage();
   const { products } = useStore();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedDevice, setSelectedDevice] = useState('All');
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
   const categories = [
-    { id: 'iphone', name: t.home.categories.iphone, icon: <IoPhonePortraitOutline aria-hidden="true" />, route: '/iPhones' },
-    { id: 'android', name: t.home.categories.android, icon: <IoPhonePortraitOutline aria-hidden="true" />, route: '/Android' },
-    { id: 'watch', name: t.home.categories.watch, icon: <IoWatchOutline aria-hidden="true" />, route: '/Watches' },
-    { id: 'foldable', name: t.home.categories.foldable, icon: <MdOutlineDevices aria-hidden="true" />, route: '/Foldables' },
-    { id: 'vision', name: t.home.categories.vision, icon: <IoEyeOutline aria-hidden="true" />, route: '/Vision' },
+    { id: 'chargers', name: t.home.categories.chargers, icon: <MdOutlineCable aria-hidden="true" />, route: '/Chargers' },
+    { id: 'cases', name: t.home.categories.cases, icon: <IoPhonePortraitOutline aria-hidden="true" />, route: '/Cases' },
+    { id: 'powerbanks', name: t.home.categories.powerbanks, icon: <IoBatteryChargingOutline aria-hidden="true" />, route: '/PowerBanks' },
+    { id: 'screen-protectors', name: t.home.categories['screen-protectors'], icon: <IoShieldCheckmarkOutline aria-hidden="true" />, route: '/ScreenProtectors' },
   ];
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategory((prev) => (prev === categoryId ? null : categoryId));
   };
 
+  const matchesDevice = (item) => {
+    if (selectedDevice === 'All') return true;
+    return (
+      (Array.isArray(item.compatibleWith) && item.compatibleWith.includes(selectedDevice)) ||
+      item.specs.storage.toLowerCase().includes(selectedDevice.toLowerCase())
+    );
+  };
+
+  const deviceFiltered = products.filter(matchesDevice);
+
   const filteredProducts = selectedCategory
-    ? products.filter((item) => item.type === selectedCategory)
+    ? deviceFiltered.filter((item) => item.type === selectedCategory)
     : [];
 
-  const samsungPhones = products.filter((item) => item.brand === 'Samsung');
-  const otherPhones = products.filter((item) => item.brand !== 'Samsung');
-  const featuredFold = products[0];
+  const chargers = deviceFiltered.filter((item) => item.type === 'chargers');
+  const cases = deviceFiltered.filter((item) => item.type === 'cases');
+  const powerbanks = deviceFiltered.filter((item) => item.type === 'powerbanks');
+  const protectors = deviceFiltered.filter((item) => item.type === 'screen-protectors');
+
+  // Pick 3 distinct category highlights for the hero collage
+  const heroHighlights = [
+    products.find((p) => p.type === 'chargers'),
+    products.find((p) => p.type === 'cases'),
+    products.find((p) => p.type === 'powerbanks'),
+  ].filter(Boolean);
 
   const activeCategoryObj = categories.find((c) => c.id === selectedCategory);
 
@@ -54,7 +77,7 @@ const Hero = () => {
 
   return (
     <div className="home-page">
-      <section className="hero-editorial container" aria-label="Featured promotion">
+      <section className="hero-editorial container" aria-label="TechnoLab promotion">
         <div className="hero-editorial__card">
           <div className="hero-editorial__copy">
             <span className="hero-editorial__eyebrow">{t.home.heroEyebrow}</span>
@@ -64,25 +87,36 @@ const Hero = () => {
               <Link to="/Deals" className="btn-primary">
                 {t.home.heroCta} <FaArrowRight size={13} aria-hidden="true" />
               </Link>
-              {featuredFold && (
-                <Link to={`/laptop/${featuredFold.slug}`} className="btn-secondary hero-editorial__alt">
-                  {featuredFold.name}
-                </Link>
-              )}
+              <Link to="/Chargers" className="btn-secondary hero-editorial__alt">
+                {t.home.categories.chargers}
+              </Link>
             </div>
           </div>
 
-          {featuredFold && (
-            <Link to={`/laptop/${featuredFold.slug}`} className="hero-editorial__media">
-              <img
-                src={featuredFold.image}
-                alt={featuredFold.name}
-                fetchpriority="high"
-                width="650"
-                height="519"
-                className="hero-editorial__img"
-              />
-            </Link>
+          {heroHighlights.length > 0 && (
+            <div className="hero-collage" aria-label="Featured accessories">
+              {heroHighlights.map((item, idx) => (
+                <Link
+                  key={item.id}
+                  to={`/laptop/${item.slug}`}
+                  className={`hero-collage__tile${idx === 0 ? ' hero-collage__tile--lead' : ''}`}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    fetchpriority={idx === 0 ? 'high' : undefined}
+                    onError={(e) => {
+                      e.currentTarget.src = '/technolab_georgia.jpg';
+                    }}
+                    className="hero-collage__img"
+                  />
+                  <span className="hero-collage__caption">
+                    <span className="hero-collage__name">{item.name}</span>
+                    <span className="hero-collage__price">{item.price} ₾</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
           )}
         </div>
       </section>
@@ -102,7 +136,7 @@ const Hero = () => {
             </button>
           ) : (
             <Link to="/Deals" className="section-link">
-              {t.home.viewAllPhones} <FaArrowRight size={13} aria-hidden="true" />
+              {t.home.viewAllProducts} <FaArrowRight size={13} aria-hidden="true" />
             </Link>
           )}
         </div>
@@ -128,6 +162,23 @@ const Hero = () => {
             );
           })}
         </ul>
+
+        <div className="device-bar" role="group" aria-label={t.home.brandsHeading}>
+          <span className="device-bar__label">{t.home.brandsHeading}:</span>
+          <div className="device-bar__pills">
+            {['All', ...COMPATIBILITY_BRANDS].map((device) => (
+              <button
+                key={device}
+                type="button"
+                onClick={() => setSelectedDevice(device)}
+                aria-pressed={selectedDevice === device}
+                className={`filter-pill${selectedDevice === device ? ' is-active' : ''}`}
+              >
+                {device === 'All' ? t.catalog.allBrands : device}
+              </button>
+            ))}
+          </div>
+        </div>
       </section>
 
       {selectedCategory && (
@@ -148,52 +199,72 @@ const Hero = () => {
         </section>
       )}
 
-      <section className="page-section container" aria-labelledby="featured-heading">
-        <div className="section-header">
-          <h2 id="featured-heading" className="section-title">
-            {t.home.featuredHeading}
-          </h2>
-          <Link to="/Deals" className="section-link">
-            {t.home.seeAllPhones} <FaArrowRight size={13} aria-hidden="true" />
-          </Link>
-        </div>
-        <div className="product-grid">
-          {products.map((item) => (
-            <LaptopCard key={item.id} laptop={item} />
-          ))}
-        </div>
-      </section>
-
-      {samsungPhones.length > 0 && (
-        <section className="page-section container" aria-labelledby="samsung-heading">
+      {chargers.length > 0 && (
+        <section className="page-section container" aria-labelledby="chargers-heading">
           <div className="section-header">
-            <h2 id="samsung-heading" className="section-title">
-              {t.home.samsungHeading}
+            <h2 id="chargers-heading" className="section-title">
+              {t.home.chargersHeading}
             </h2>
-            <Link to="/Deals?brand=Samsung" className="section-link">
-              {t.home.seeAllSamsung} <FaArrowRight size={13} aria-hidden="true" />
+            <Link to="/Chargers" className="section-link">
+              {t.home.seeAll} <FaArrowRight size={13} aria-hidden="true" />
             </Link>
           </div>
           <div className="product-grid">
-            {samsungPhones.map((item) => (
+            {chargers.map((item) => (
               <LaptopCard key={item.id} laptop={item} />
             ))}
           </div>
         </section>
       )}
 
-      {otherPhones.length > 0 && (
-        <section className="page-section container" aria-labelledby="more-brands-heading">
+      {cases.length > 0 && (
+        <section className="page-section container" aria-labelledby="cases-heading">
           <div className="section-header">
-            <h2 id="more-brands-heading" className="section-title">
-              {t.home.pixelXiaomiHeading}
+            <h2 id="cases-heading" className="section-title">
+              {t.home.casesHeading}
             </h2>
-            <Link to="/Android" className="section-link">
-              {t.home.seeAllFlagships} <FaArrowRight size={13} aria-hidden="true" />
+            <Link to="/Cases" className="section-link">
+              {t.home.seeAll} <FaArrowRight size={13} aria-hidden="true" />
             </Link>
           </div>
           <div className="product-grid">
-            {otherPhones.map((item) => (
+            {cases.map((item) => (
+              <LaptopCard key={item.id} laptop={item} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {powerbanks.length > 0 && (
+        <section className="page-section container" aria-labelledby="powerbanks-heading">
+          <div className="section-header">
+            <h2 id="powerbanks-heading" className="section-title">
+              {t.home.powerbanksHeading}
+            </h2>
+            <Link to="/PowerBanks" className="section-link">
+              {t.home.seeAll} <FaArrowRight size={13} aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="product-grid">
+            {powerbanks.map((item) => (
+              <LaptopCard key={item.id} laptop={item} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {protectors.length > 0 && (
+        <section className="page-section container" aria-labelledby="protectors-heading">
+          <div className="section-header">
+            <h2 id="protectors-heading" className="section-title">
+              {t.home.protectorsHeading}
+            </h2>
+            <Link to="/ScreenProtectors" className="section-link">
+              {t.home.seeAll} <FaArrowRight size={13} aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="product-grid">
+            {protectors.map((item) => (
               <LaptopCard key={item.id} laptop={item} />
             ))}
           </div>
@@ -213,22 +284,6 @@ const Hero = () => {
               <h3 className="trust-card__title">{item.title}</h3>
               <p className="trust-card__text">{item.text}</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="page-section container" aria-labelledby="brands-heading">
-        <div className="section-header">
-          <h2 id="brands-heading" className="section-title">
-            {t.home.brandsHeading}
-          </h2>
-        </div>
-        <div className="brand-strip">
-          {BRANDS.map((brand) => (
-            <Link key={brand} to={`/Deals?brand=${brand}`} className="brand-pill">
-              <span>{brand}</span>
-              <FaArrowRight size={13} aria-hidden="true" />
-            </Link>
           ))}
         </div>
       </section>

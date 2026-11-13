@@ -8,7 +8,7 @@ import { useLanguage } from '../context/LanguageContext';
 const Navbar = () => {
   const [inputValue, setInputValue] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
-  const { products, cartCount, wishlist } = useStore();
+  const { products, cartCount, wishlist, openCart } = useStore();
   const { lang, setLang, t } = useLanguage();
   const navigate = useNavigate();
   const mobileMenuRef = useRef(null);
@@ -16,20 +16,21 @@ const Navbar = () => {
 
   const categoryLinks = [
     { to: '/', label: t.nav.home },
-    { to: '/iPhones', label: t.nav.iphones },
-    { to: '/Android', label: t.nav.android },
-    { to: '/Watches', label: t.nav.watches },
-    { to: '/Vision', label: t.nav.vision },
+    { to: '/Chargers', label: t.nav.chargers },
+    { to: '/Cases', label: t.nav.cases },
+    { to: '/PowerBanks', label: t.nav.powerbanks },
+    { to: '/ScreenProtectors', label: t.nav.screenProtectors },
     { to: '/Deals', label: t.nav.deals },
   ];
 
   const query = inputValue.trim().toLowerCase();
   const filteredLaptops = query
     ? products.filter(
-        (laptop) =>
-          laptop.name.toLowerCase().includes(query) ||
-          laptop.brand.toLowerCase().includes(query) ||
-          laptop.specs.processor.toLowerCase().includes(query)
+        (item) =>
+          item.name.toLowerCase().includes(query) ||
+          item.brand.toLowerCase().includes(query) ||
+          item.specs.storage.toLowerCase().includes(query) ||
+          item.specs.processor.toLowerCase().includes(query)
       )
     : [];
 
@@ -84,18 +85,15 @@ const Navbar = () => {
         className={`lang-switcher__btn${lang === 'en' ? ' is-active' : ''}`}
         aria-pressed={lang === 'en'}
       >
-        English
+        EN
       </button>
-      <span className="lang-switcher__sep" aria-hidden="true">
-        |
-      </span>
       <button
         type="button"
         onClick={() => setLang('ka')}
         className={`lang-switcher__btn${lang === 'ka' ? ' is-active' : ''}`}
         aria-pressed={lang === 'ka'}
       >
-        Georgian
+        ქარ
       </button>
     </div>
   );
@@ -106,13 +104,14 @@ const Navbar = () => {
         <div className="container site-header__row">
           <Link to="/" className="site-logo">
             <img
-              src="/ilab-logo.jpg"
+              src="/technolab_georgia.jpg"
               alt={t.brandName}
               width="44"
               height="44"
               className="site-logo__img"
             />
-            <span className="site-logo__text">{t.brandName}</span>
+            <span className="site-logo__text site-logo__text--full">{t.brandName}</span>
+            <span className="site-logo__text site-logo__text--short">ტექნოლაბი</span>
           </Link>
 
           <form ref={searchRef} className="site-search" onSubmit={handleSearchSubmit} role="search">
@@ -162,7 +161,7 @@ const Navbar = () => {
                       <span className="site-search__item-info">
                         <span className="site-search__item-name">{laptop.name}</span>
                         <span className="site-search__item-meta">
-                          {laptop.specs.processor} · {laptop.price.toLocaleString()} ლ
+                          {laptop.brand} · {laptop.price.toLocaleString()} ₾
                         </span>
                       </span>
                     </Link>
@@ -177,13 +176,22 @@ const Navbar = () => {
           </form>
 
           <div className="site-actions">
-            <NavLink to="/Account" className="site-action-link" aria-label={t.account}>
+            <NavLink
+              to="/Account"
+              className="site-action-link"
+              aria-label={t.account}
+              title={t.account}
+            >
               <span className="site-action-icon">
                 <CiUser size={22} aria-hidden="true" />
               </span>
-              <span className="site-action-link__label">{t.account}</span>
             </NavLink>
-            <NavLink to="/Wishlist" className="site-action-link" aria-label={t.wishlist}>
+            <NavLink
+              to="/Wishlist"
+              className="site-action-link"
+              aria-label={t.wishlist}
+              title={t.wishlist}
+            >
               <span className="site-action-icon">
                 <CiHeart size={22} aria-hidden="true" />
                 {wishlist.length > 0 && (
@@ -192,9 +200,14 @@ const Navbar = () => {
                   </span>
                 )}
               </span>
-              <span className="site-action-link__label">{t.wishlist}</span>
             </NavLink>
-            <NavLink to="/Cart" className="site-action-link" aria-label={t.cart}>
+            <button
+              type="button"
+              onClick={openCart}
+              className="site-action-link site-action-link--btn"
+              aria-label={t.cart}
+              title={t.cart}
+            >
               <span className="site-action-icon">
                 <CiShoppingCart size={22} aria-hidden="true" />
                 {cartCount > 0 && (
@@ -203,8 +216,7 @@ const Navbar = () => {
                   </span>
                 )}
               </span>
-              <span className="site-action-link__label">{t.cart}</span>
-            </NavLink>
+            </button>
 
             <button
               type="button"
@@ -222,25 +234,22 @@ const Navbar = () => {
 
       <nav className="site-subnav" aria-label="Primary">
         <div className="container site-subnav__inner">
-          <span className="site-subnav__label">{t.allCategories}</span>
-          <div className="site-subnav__right">
-            <ul id="site-menu" className="site-subnav__list">
-              {categoryLinks.map((item) => (
-                <li key={item.to}>
-                  <NavLink
-                    to={item.to}
-                    end={item.to === '/'}
-                    className={({ isActive }) =>
-                      `site-subnav__link${isActive ? ' is-active' : ''}`
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-            {renderLanguageSwitcher('bar')}
-          </div>
+          <ul id="site-menu" className="site-subnav__list">
+            {categoryLinks.map((item) => (
+              <li key={item.to}>
+                <NavLink
+                  to={item.to}
+                  end={item.to === '/'}
+                  className={({ isActive }) =>
+                    `site-subnav__link${isActive ? ' is-active' : ''}`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          {renderLanguageSwitcher('bar')}
         </div>
       </nav>
 
